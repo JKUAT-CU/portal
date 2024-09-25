@@ -1,0 +1,10 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Redirect requests to the corresponding PHP files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(index|nomination|hatua)$ $1.php [L]
+
+# Redirect to homepage if no specific page is found
+RewriteRule ^$ index.php [L]
