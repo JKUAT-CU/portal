@@ -1,5 +1,5 @@
 <?php
-include 'db.php'; // Include the database connection file
+include 'backend/db.php'; // Include the database connection file
 
 // Check for database connection error
 if ($mysqli->connect_error) {
