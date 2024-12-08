@@ -13,12 +13,16 @@ include "../../backend/db.php"; // Ensure this file has the correct $db variable
 include "../session.php";
 $user_id = $_SESSION['user_id'];
 
-// Fetch account number and user email securely
+
+// Fetch account number for the logged-in user securely
 $userQuery = $mysqli->prepare("SELECT account_number FROM makueni WHERE member_id = ?");
-$userQuery->bind_param("s", $user_id);
+$userQuery->bind_param("s", $user_id);  // "s" means the parameter is a string
 $userQuery->execute();
+
+// Get the result
 $userResult = $userQuery->get_result();
 
+// Check if a result is returned
 if ($userResult->num_rows === 0) {
     echo "No account numbers found for this user.";
     exit();
