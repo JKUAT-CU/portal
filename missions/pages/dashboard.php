@@ -42,7 +42,7 @@ if (isset($_SESSION['email'])) {
     }
 }
 
-$apiUrl = "http://localhost/portal1/missions/pages/api.php?accountNumber=" . urlencode($accountNumber);
+$apiUrl = "https://portal.jkuatcu.org/missions/pages/api.php?accountNumber=" . urlencode($accountNumber);
 
 
 // Create a stream context with the API key in the header
