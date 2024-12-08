@@ -10,7 +10,7 @@ define('API_KEY', '1d99e5708647f2a85298e64126d481a75654e69a2fd26a577d2ab0942a524
 
 // Include the database connection file
 include "../../backend/db.php"; // Ensure this file has the correct $db variable
-
+include "../session.php";
 $user_id = $_SESSION['user_id'];
 
 // Fetch account number and user email securely
