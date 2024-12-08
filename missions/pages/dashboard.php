@@ -3,7 +3,6 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-session_start();
 
 // Define the fixed API key
 define('API_KEY', '1d99e5708647f2a85298e64126d481a75654e69a2fd26a577d2ab0942a5240a8');
@@ -13,23 +12,19 @@ include "../../backend/db.php"; // Ensure this file has the correct $db variable
 include "../session.php";
 $user_id = $_SESSION['user_id'];
 
-
 // Fetch account number for the logged-in user securely
 $userQuery = $mysqli->prepare("SELECT account_number FROM makueni WHERE member_id = ?");
 $userQuery->bind_param("s", $user_id);  // "s" means the parameter is a string
 $userQuery->execute();
 
-// Get the result
-$userResult = $userQuery->get_result();
+// Bind result variables
+$userQuery->bind_result($accountNumber);
 
 // Check if a result is returned
-if ($userResult->num_rows === 0) {
+if (!$userQuery->fetch()) {
     echo "No account numbers found for this user.";
     exit();
 }
-
-$userData = $userResult->fetch_assoc();
-$accountNumber = $userData['account_number'];
 
 // Default mission cost
 $missionCost = 1700;
