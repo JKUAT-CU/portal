@@ -4,26 +4,26 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// // Define the fixed API key
-// define('API_KEY', '1d99e5708647f2a85298e64126d481a75654e69a2fd26a577d2ab0942a5240a8');
+// Define the fixed API key
+define('API_KEY', '1d99e5708647f2a85298e64126d481a75654e69a2fd26a577d2ab0942a5240a8');
 
-// // Check for the API key in the headers
-// $headers = apache_request_headers();
-// $clientApiKey = $headers['X-API-KEY'] ?? null; // Fetch the key from the "X-API-KEY" header
+// Check for the API key in the headers
+$headers = apache_request_headers();
+$clientApiKey = $headers['X-API-KEY'] ?? null; // Fetch the key from the "X-API-KEY" header
 
-// // Validate the API key
-// if ($clientApiKey !== API_KEY) {
-//     http_response_code(403); // Forbidden
-//     echo json_encode(['error' => 'Invalid or missing API key']);
-//     exit();
-// }
+// Validate the API key
+if ($clientApiKey !== API_KEY) {
+    http_response_code(403); // Forbidden
+    echo json_encode(['error' => 'Invalid or missing API key']);
+    exit();
+}
 
-// // Check if the accountNumber parameter is provided
-// if (!isset($_GET['accountNumber']) || empty(trim($_GET['accountNumber']))) {
-//     http_response_code(400); // Bad Request
-//     echo json_encode(['error' => 'Missing or invalid account number']);
-//     exit();
-// }
+// Check if the accountNumber parameter is provided
+if (!isset($_GET['accountNumber']) || empty(trim($_GET['accountNumber']))) {
+    http_response_code(400); // Bad Request
+    echo json_encode(['error' => 'Missing or invalid account number']);
+    exit();
+}
 
 $accountNumber = 'MM620'; // Sanitize the input
 
