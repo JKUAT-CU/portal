@@ -1,7 +1,7 @@
 <?php
 define('DB_SERVER', 'localhost');
-define('DB_USERNAME', 'portals'); // Change this to your actual database username
-define('DB_PASSWORD', 'I&Y*U&^(JN&Y Kjbkjn'); // Change this to your actual database password
+define('DB_USERNAME', 'jkuatcu_devs'); // Change this to your actual database username
+define('DB_PASSWORD', '#God@isAble!#'); // Change this to your actual database password
 define('DB_NAME', 'jkuatcu_daraja');
 
 try {
