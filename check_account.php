@@ -1,8 +1,8 @@
 <?php
-session_start();
+include 'db.php';
 
-// Database connection
-$db = new mysqli('localhost', 'root', '', 'jkuatcu_data');
+// Prepare the statement using $db
+
 
 if ($db->connect_error) {
     echo json_encode(['hasAccount' => false, 'message' => 'Database connection failed.']);
