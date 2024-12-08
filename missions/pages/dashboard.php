@@ -44,7 +44,6 @@ if (isset($_SESSION['email'])) {
 
 $apiUrl = "https://portal.jkuatcu.org/missions/pages/api.php?accountNumber=" . urlencode($accountNumber);
 
-
 // Create a stream context with the API key in the header
 $options = [
     "http" => [
@@ -60,6 +59,17 @@ if ($response === false) {
 }
 
 $data = json_decode($response, true);
+
+// Set total amount raised to 0 if no data exists
+$totalAmount = 0;
+if (!empty($data)) {
+    // Loop through the API data to calculate the total amount raised
+    foreach ($data as $entry) {
+        if ($entry['BillRefNumber'] === $accountNumber) {
+            $totalAmount += $entry['TransAmount'];
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -105,15 +115,8 @@ $data = json_decode($response, true);
     const accountNumber = '<?php echo $accountNumber; ?>';
     const missionCost = <?php echo $missionCost; ?>;
     
-    // Initialize total amount
-    let totalAmount = 0;
-
-    // Loop through the API data to calculate the total amount raised
-    <?php foreach ($data as $entry): ?>
-      if ('<?php echo $entry['BillRefNumber']; ?>' === accountNumber) {
-        totalAmount += <?php echo $entry['TransAmount']; ?>;
-      }
-    <?php endforeach; ?>
+    // Initialize total amount with the value from PHP
+    let totalAmount = <?php echo $totalAmount; ?>;
 
     // Calculate the balance
     const balance = missionCost - totalAmount;
