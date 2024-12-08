@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Start user session
             $_SESSION['user_id'] = $row['id']; // Store user ID in session
             $_SESSION['toast_message'] = "Login successful! Redirecting..."; // Success message
-            header("Location: nomination.php"); // Redirect to dashboard after successful login
+            header("Location: mission.php"); // Redirect to dashboard after successful login
             exit();
         } else {
             $_SESSION['toast_message'] = "Invalid password. Please try again."; // Error message for wrong password
