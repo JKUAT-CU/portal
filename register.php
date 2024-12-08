@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($input['action'] === 'register') {
         // Database connection (update with your credentials)
-        $db = new mysqli('localhost', 'root', '', 'jkuatcu_data');
+        $db = new mysqli('localhost', 'jkuatcu_devs', '#God@isAble!#', 'jkuatcu_data');
 
         if ($db->connect_error) {
             echo json_encode(['success' => false, 'message' => 'Database connection failed.']);
