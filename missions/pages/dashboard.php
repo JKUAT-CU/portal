@@ -135,8 +135,6 @@ if (!empty($data)) {
 </body>
 </html>
 <?php
-// Start session
-session_start();
 
 // Database credentials
 $host = 'localhost';
