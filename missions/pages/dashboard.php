@@ -139,7 +139,7 @@ if (!empty($data)) {
 // Database credentials
 $host = 'localhost';
 $user = 'jkuatcu_devs';
-$password = '#God@isAble!#';  // Ensure this is the correct password
+$password = '#God@isAble!#';
 $database = 'jkuatcu_data';
 
 // Create connection
@@ -162,24 +162,18 @@ if (isset($_SESSION['user_id'])) {
         // Bind parameters and execute statement
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
-        $result = $stmt->get_result();
 
-        // Check if the query returned results
-        if ($result->num_rows > 0) {
-            // Fetch the image path from the database
-            $row = $result->fetch_assoc();
-            $image_path = $row['images'];
+        // Bind result variables
+        $stmt->bind_result($image_path);
+        $stmt->fetch();
 
-            // Include the appropriate script based on the image path
-            if (!empty($image_path)) {
-                include 'download.php';
-            } else {
-                include 'script.php';
-            }
+        // Include the appropriate script based on the image path
+        if (!empty($image_path)) {
+            include 'download.php';
         } else {
-            echo "No results found for user ID: $user_id";
+            include 'script.php';
         }
-        
+
         // Close the statement
         $stmt->close();
     } else {
