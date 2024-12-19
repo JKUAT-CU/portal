@@ -93,6 +93,9 @@ if (isset($_SESSION['user_id'])) {
             // Update the database with the image link for the first poster
             $imageLink1 = '../' . $mergedImagePath;
 
+            // Free result from the previous query before starting a new query
+            $stmt->free_result();
+
             // Prepare the UPDATE query
             $query1 = "UPDATE makueni SET images = ? WHERE member_id = ?";
             $stmt1 = $mysqli->prepare($query1);
@@ -117,8 +120,8 @@ if (isset($_SESSION['user_id'])) {
         }
 
         // Free result and close the prepared statement
-        $stmt->free_result();
         $stmt->close();
+        $stmt1->close();
     } else {
         // Handle invalid request method or missing image data
         echo "Error: Invalid request or missing image data.";
