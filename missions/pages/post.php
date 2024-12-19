@@ -32,9 +32,15 @@ if (isset($_SESSION['user_id'])) {
         FROM cu_members cm
         JOIN makueni m ON cm.id = m.member_id
         WHERE cm.id = ?
-    ";
-    
+        ";
+
+        // Prepare and execute the SELECT query
         $stmt = $mysqli->prepare($userSql);
+        if ($stmt === false) {
+            echo "Error preparing SELECT query: " . $mysqli->error;
+            exit();
+        }
+
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         
@@ -87,27 +93,32 @@ if (isset($_SESSION['user_id'])) {
             // Update the database with the image link for the first poster
             $imageLink1 = '../' . $mergedImagePath;
 
-            // Check if the query preparation is successful
+            // Prepare the UPDATE query
             $query1 = "UPDATE makueni SET images = ? WHERE member_id = ?";
             $stmt1 = $mysqli->prepare($query1);
 
             if ($stmt1 === false) {
-                echo "Error preparing the query: " . $mysqli->error;
+                echo "Error preparing UPDATE query: " . $mysqli->error;
                 exit();
             }
 
-            // Bind parameters and execute
+            // Bind parameters and execute the UPDATE query
             $stmt1->bind_param("si", $imageLink1, $user_id);
             if (!$stmt1->execute()) {
-                echo "Error executing the query: " . $stmt1->error;
+                echo "Error executing the UPDATE query: " . $stmt1->error;
                 exit();
             }
 
+            // Successfully updated image link
+            echo "Image uploaded and database updated successfully.";
         } else {
             // Handle the case where no account information is found
             echo "Error: Unable to retrieve account information.";
         }
 
+        // Free result and close the prepared statement
+        $stmt->free_result();
+        $stmt->close();
     } else {
         // Handle invalid request method or missing image data
         echo "Error: Invalid request or missing image data.";
