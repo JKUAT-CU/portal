@@ -138,8 +138,8 @@ if (!empty($data)) {
 
 // Database credentials
 $host = 'localhost';
-$user = 'portals';
-$password = 'I&Y*U&^(JN&Y Kjbkjn';
+$user = 'jkuatcu_devs';
+$password = '#God@isAble!#';  // Ensure this is the correct password
 $database = 'jkuatcu_data';
 
 // Create connection
