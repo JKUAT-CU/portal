@@ -144,7 +144,7 @@ $mysqli->close();
                             <button type="submit" class="btn btn-custom btn-lg btn-block" data-mdb-ripple-color="dark">Sign In</button>
                         </form>
 
-                        <p class="mt-3"><a href="#" class="text-white" id="forgotPassword">Forgot Password?</a></p>
+                        <p class="mt-3"><a href="forgot.php" class="text-white" id="forgotPassword">Forgot Password?</a></p>
                         <p>Don't have an account? <a href="registration.php" style="color: #f7a306;">Register here</a></p>
                     </div>
                 </div>

@@ -29,18 +29,7 @@ if (!$userQuery->fetch()) {
 // Default mission cost
 $missionCost = 1700;
 
-// Define email groups
-$emailList = ["chegeperpetuah38@gmail.com", "test1@test.com", "samuelkitanga20@gmail.com", "nyamgeroesther@gmail.com"];
-$emailHlubi = ["hlubiolombo7@gmail.com", "mutindar617@gmail.com"];
 
-// Determine mission cost based on user email
-if (isset($_SESSION['email'])) {
-    if (in_array($_SESSION['email'], $emailList)) {
-        $missionCost = 10000;
-    } elseif (in_array($_SESSION['email'], $emailHlubi)) {
-        $missionCost = 100000;
-    }
-}
 
 $apiUrl = "https://portal.jkuatcu.org/missions/pages/api.php?accountNumber=" . urlencode($accountNumber);
 

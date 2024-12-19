@@ -102,7 +102,7 @@ uploadImage: function(img, callback){
 
   $.ajax({
     type: "POST",
-    url: "../post.php", //backend script URL
+    url: "post.php", //backend script URL
     data: { 
        imgBase64: dataURL
     }
