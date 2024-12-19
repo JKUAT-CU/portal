@@ -86,13 +86,23 @@ if (isset($_SESSION['user_id'])) {
 
             // Update the database with the image link for the first poster
             $imageLink1 = '../' . $mergedImagePath;
-            $query1 = "UPDATE makueni SET images = ? WHERE id = ?";
+
+            // Check if the query preparation is successful
+            $query1 = "UPDATE makueni SET images = ? WHERE member_id = ?";
             $stmt1 = $mysqli->prepare($query1);
-            $stmt1->bind_param("si", $imageLink1, $user_id);
-            if (!$stmt1->execute()) {
-                echo "Error updating image link in the database for the first poster.";
+
+            if ($stmt1 === false) {
+                echo "Error preparing the query: " . $mysqli->error;
                 exit();
             }
+
+            // Bind parameters and execute
+            $stmt1->bind_param("si", $imageLink1, $user_id);
+            if (!$stmt1->execute()) {
+                echo "Error executing the query: " . $stmt1->error;
+                exit();
+            }
+
         } else {
             // Handle the case where no account information is found
             echo "Error: Unable to retrieve account information.";
