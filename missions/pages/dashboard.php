@@ -13,7 +13,7 @@ include "../session.php";
 $user_id = $_SESSION['user_id'];
 
 // Fetch account number for the logged-in user securely
-$userQuery = $mysqli->prepare("SELECT account_number FROM makueni WHERE member_id = ?");
+$userQuery = $mysqli->prepare("SELECT account_number FROM user WHERE id = ?");
 $userQuery->bind_param("s", $user_id);  // "s" means the parameter is a string
 $userQuery->execute();
 
