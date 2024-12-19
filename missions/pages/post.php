@@ -37,16 +37,12 @@ if (isset($_SESSION['user_id'])) {
         $stmt = $mysqli->prepare($userSql);
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
-        $result = $stmt->get_result();
+        
+        // Bind the result variables
+        $stmt->bind_result($firstName, $surname, $accountNo);
 
-        // Check if the query was successful
-        if ($result && $result->num_rows > 0) {
-            // Fetch the data as an associative array
-            $row = $result->fetch_assoc();
-            $accountNo = $row['account_number'];
-            $firstName = $row['first_name'];
-            $surname = $row['surname'];
-
+        // Fetch the results
+        if ($stmt->fetch()) {
             // Define the default poster image paths
             $defaultPosterPath = '../uploads/makueni.png';
 
@@ -97,8 +93,6 @@ if (isset($_SESSION['user_id'])) {
                 echo "Error updating image link in the database for the first poster.";
                 exit();
             }
-
-
         } else {
             // Handle the case where no account information is found
             echo "Error: Unable to retrieve account information.";
