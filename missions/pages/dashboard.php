@@ -72,6 +72,8 @@ if (!empty($data)) {
 }
 ?>
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,6 +90,11 @@ if (!empty($data)) {
     }
     .alert-success {
       font-size: 1.2rem;
+    }
+    .btn-custom {
+      display: inline-block;
+      margin-top: 15px;
+      text-decoration: none;
     }
   </style>
 </head>
@@ -106,17 +113,18 @@ if (!empty($data)) {
         <p class="card-text">Account Number: <strong id="account-number"></strong></p>
         <p class="card-text text-success">Amount Raised: <span id="total-amount">KES 0</span></p>
         <p class="card-text text-danger">Balance: <span id="balance">KES 0</span></p>
+        
+        <!-- Add Proforma Button -->
+        <a href="proforma.php" class="btn btn-primary btn-custom">Get Proforma</a>
       </div>
     </div>
   </div>
 
   <script>
-    // Set Account Number and Mission Cost from PHP to JS
-    const accountNumber = '<?php echo $accountNumber; ?>';
-    const missionCost = <?php echo $missionCost; ?>;
-    
-    // Initialize total amount with the value from PHP
-    let totalAmount = <?php echo $totalAmount; ?>;
+    // Default fallback values for PHP variables
+    const accountNumber = '<?php echo $accountNumber ?? "Unknown"; ?>';
+    const missionCost = <?php echo $missionCost ?? 0; ?>;
+    const totalAmount = <?php echo $totalAmount ?? 0; ?>;
 
     // Calculate the balance
     const balance = missionCost - totalAmount;
@@ -129,65 +137,11 @@ if (!empty($data)) {
 
     // Display success message if balance is zero or less
     if (balance <= 0) {
-      document.getElementById('success-message').innerHTML = '<div class="alert alert-success" role="alert">Congratulations 🎉🎉🎉! You have completed payment.</div>';
+      document.getElementById('success-message').innerHTML = `
+        <div class="alert alert-success" role="alert">
+          Congratulations 🎉🎉🎉! You have completed payment.
+        </div>`;
     }
   </script>
 </body>
 </html>
-<?php
-
-// Database credentials
-$host = 'localhost';
-$user = 'jkuatcu_devs';
-$password = '#God@isAble!#';
-$database = 'jkuatcu_data';
-
-// Create connection
-$conn = new mysqli($host, $user, $password, $database);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Check if user_id is set in session
-if (isset($_SESSION['user_id'])) {
-    $user_id = $_SESSION['user_id'];
-
-    // Query to fetch image URL from the user table
-    $userSql = "SELECT images FROM makueni WHERE member_id = ?";
-    $stmt = $conn->prepare($userSql);
-
-    if ($stmt) {
-        // Bind parameters and execute statement
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
-
-        // Bind result variables
-        $stmt->bind_result($image_path);
-        $stmt->fetch();
-
-        // Include the appropriate script based on the image path
-        if (!empty($image_path)) {
-            include 'download.php';
-        } else {
-            include 'script.php';
-        }
-
-        // Close the statement
-        $stmt->close();
-    } else {
-        // Prepared statement creation failed
-        echo "Error: " . $conn->error;
-    }
-} else {
-    // User ID not set in session
-    echo "User ID not set in session";
-    // Optionally redirect the user to the signin page
-    // header("Location: signin.php");
-    // exit();
-}
-
-// Close connection
-$conn->close();
-?>

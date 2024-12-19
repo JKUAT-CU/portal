@@ -4,7 +4,6 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once "../../backend/db.php"; // This file defines $mysqli
 require_once "../session.php";
-session_start();
 
 // Check if user_id is set in session
 if (isset($_SESSION['user_id'])) {
@@ -27,8 +26,14 @@ if (isset($_SESSION['user_id'])) {
             exit();
         }
 
-        // Query to retrieve account number and name from the database using user_id
-        $userSql = "SELECT name, account_no FROM makueni WHERE id = ?";
+        // Query to retrieve first_name, surname, and account_no from the database using user_id
+        $userSql = "
+        SELECT cm.first_name, cm.surname, m.account_number
+        FROM cu_members cm
+        JOIN makueni m ON cm.id = m.member_id
+        WHERE cm.id = ?
+    ";
+    
         $stmt = $mysqli->prepare($userSql);
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
@@ -38,12 +43,12 @@ if (isset($_SESSION['user_id'])) {
         if ($result && $result->num_rows > 0) {
             // Fetch the data as an associative array
             $row = $result->fetch_assoc();
-            $accountNo = $row['account_no'];
-            $name = $row['name'];
+            $accountNo = $row['account_number'];
+            $firstName = $row['first_name'];
+            $surname = $row['surname'];
 
             // Define the default poster image paths
-            $defaultPosterPath = 'uploads/makueni.png';
-           
+            $defaultPosterPath = '../uploads/makueni.png';
 
             // Create a new image from the default poster image
             $posterImage = imagecreatefrompng($defaultPosterPath);
@@ -68,14 +73,14 @@ if (isset($_SESSION['user_id'])) {
 
             // Define text color and font properties for the first poster
             $textColor = imagecolorallocate($posterImage, 0x00, 0x68, 0x38); // Hex color #006838
-            $font = realpath('Futura-Bold.ttf'); // Get the absolute path dynamically
+            $font = realpath('../assets/fonts/Futura-Bold.ttf'); // Get the absolute path dynamically
             $fontSize = 30;
 
             // Add account number to the first poster
             imagettftext($posterImage, $fontSize, 0, 942, 1086, $textColor, $font, $accountNo);
 
             // Define the path to save the merged image for the first poster
-            $mergedImagePath = 'uploads/' . $user_id . '.png';
+            $mergedImagePath = '../uploads/' . $user_id . '.png';
 
             // Save the merged image as a new file for the first poster
             imagepng($posterImage, $mergedImagePath);
@@ -85,7 +90,7 @@ if (isset($_SESSION['user_id'])) {
 
             // Update the database with the image link for the first poster
             $imageLink1 = '../' . $mergedImagePath;
-            $query1 = "UPDATE user SET image = ? WHERE id = ?";
+            $query1 = "UPDATE makueni SET images = ? WHERE id = ?";
             $stmt1 = $mysqli->prepare($query1);
             $stmt1->bind_param("si", $imageLink1, $user_id);
             if (!$stmt1->execute()) {
@@ -93,31 +98,6 @@ if (isset($_SESSION['user_id'])) {
                 exit();
             }
 
-            // Create a new image from the second poster template
-            $posterImage = imagecreatefrompng($poster2);
-
-            // Merge the uploaded image with the second poster image
-            imagecopy($posterImage, $uploadedImage, $x, $y, 0, 0, $uploadedImageWidth, $uploadedImageHeight);
-
-            // Define the path to save the merged image for the second poster
-            $mergedImagePath2 = 'uploads/attending_' . $user_id . '.png';
-
-            // Save the merged image as a new file for the second poster
-            imagepng($posterImage, $mergedImagePath2);
-
-            // Free up memory for the second poster
-            imagedestroy($posterImage);
-            imagedestroy($uploadedImage);
-
-            // Update the database with the image link for the second poster
-            $imageLink2 = '../' . $mergedImagePath2;
-            $query2 = "UPDATE user SET attend = ? WHERE id = ?";
-            $stmt2 = $mysqli->prepare($query2);
-            $stmt2->bind_param("si", $imageLink2, $user_id);
-            if (!$stmt2->execute()) {
-                echo "Error updating image link in the database for the second poster.";
-                exit();
-            }
 
         } else {
             // Handle the case where no account information is found

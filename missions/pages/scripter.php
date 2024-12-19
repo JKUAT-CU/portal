@@ -1,4 +1,3 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">  
   //Cropme in Modal
   var CiM = { 
@@ -99,18 +98,16 @@ uploadImage: function(img, callback){
 
   var dataURL = imgCanvas.toDataURL();
 
-
   $.ajax({
     type: "POST",
-    url: "post.php", //backend script URL
+    url: "../post.php", // Replace with your backend script URL
     data: { 
        imgBase64: dataURL
     }
   }).done(function(resp) {
     if (callback) callback(resp);
-    // Redirect to dashboard.php with a timestamp parameter
-    var timestamp = new Date().getTime(); // Get the current timestamp
-    window.location.href = 'dashboard.php?timestamp=' + timestamp;
+    // Redirect to dashboard.php and force refresh
+    window.location.href = 'dashboard.php?refresh=' + Date.now();
 });
 
 },
