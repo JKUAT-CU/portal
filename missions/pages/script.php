@@ -90,7 +90,7 @@
     "border": {
       "width": 2,
       "enable": true,
-      "color": "#fff"
+      "color": "#FF0000"
     }
   },
   "zoom": {
