@@ -58,19 +58,26 @@ $conn->close();
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <div class="image-container">
-                <div style="height: 70%; width: 70%; border: .8vh solid red; border-radius: 5%;">
-                    <!-- Image will be displayed here -->
-                    <img src="<?php echo $image_url . '?timestamp=' . time(); ?>" alt="Image Preview" style="height: 100%; width: 100%;">
-                    <!-- Download button -->
-                    <a class="btn btn-primary mt-3 downloadButton" href="<?php echo $image_url; ?>" download="makueniproforma.jpg">Download Proforma</a>
+                <!-- Image Container with Styling -->
+                <div style="height: 70%; width: 70%; border: 0.8vh solid red; border-radius: 5%; overflow: hidden;">
+                    <!-- Image with dynamic source and timestamp for cache busting -->
+                    <img src="<?php echo $image_url . '?timestamp=' . time(); ?>" alt="Image Preview" style="height: 100%; width: 100%; object-fit: cover;">
                 </div>
-                <div class="row">
-                    <a id="changeImage" class="btn btn-primary mt-3" href="scripts.php">Change Image</a>
-    </div>
+
+                <!-- Download Button -->
+                <a class="btn btn-primary mt-3 downloadButton" href="<?php echo $image_url; ?>" download="makueniproforma.jpg">
+                    Download Proforma
+                </a>
             </div>
         </div>
+
+        <!-- Change Image Button -->
+        <a id="changeImage" class="btn btn-primary mt-3" href="scripts.php">
+            Change Image
+        </a>
     </div>
 </div>
+
 
 
 
