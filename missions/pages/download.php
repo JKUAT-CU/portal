@@ -53,12 +53,6 @@ $conn->close();
             height: auto;
         }
     </style>
-<div class="container">
-    <div class="row">
-                    <a id="changeImage" class="btn btn-primary mt-3" href="script.php">Change Image</a>
-    </div>
-</div>
-
 
 <div class="container">
     <div class="row">

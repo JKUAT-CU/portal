@@ -175,7 +175,7 @@
           data: { imgBase64: dataURL }
         }).done(function (resp) {
           if (callback) callback(resp);
-          location.reload();
+          window.location.href = "./proforma.php"; // Redirect to dashboard.php after successful upload
         }).fail(function (error) {
           console.error('Upload failed:', error);
         });

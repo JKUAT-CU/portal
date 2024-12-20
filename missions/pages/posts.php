@@ -46,17 +46,18 @@ if (isset($_SESSION['user_id'])) {
         if ($stmt->fetch()) {
             // Define the default poster image path
             $defaultPosterPath = '../uploads/makueni.png';
-             // Create a new true-color image with the dimensions of the default poster
-             list($posterWidth, $posterHeight) = getimagesize($defaultPosterPath);
-             $posterImage = imagecreatetruecolor($posterWidth, $posterHeight);
- 
-             // Fill the poster image with a specific background color (e.g., white)
-             $backgroundColor = imagecolorallocate($posterImage, 255, 255, 255); // White background
-             imagefill($posterImage, 0, 0, $backgroundColor);
- 
-             // Load the default poster image onto the new canvas
-             $defaultPosterImage = imagecreatefrompng($defaultPosterPath);
-             imagecopy($posterImage, $defaultPosterImage, 0, 0, 0, 0, $posterWidth, $posterHeight);
+            
+            // Create a new true-color image with the dimensions of the default poster
+            list($posterWidth, $posterHeight) = getimagesize($defaultPosterPath);
+            $posterImage = imagecreatetruecolor($posterWidth, $posterHeight);
+            
+            // Fill the poster image with a specific background color (e.g., white)
+            $backgroundColor = imagecolorallocate($posterImage, 255, 255, 255); // White background
+            imagefill($posterImage, 0, 0, $backgroundColor);
+            
+            // Load the default poster image onto the new canvas
+            $defaultPosterImage = imagecreatefrompng($defaultPosterPath);
+            imagecopy($posterImage, $defaultPosterImage, 0, 0, 0, 0, $posterWidth, $posterHeight);
 
             // Create a new image from the uploaded image data
             $uploadedImage = imagecreatefromstring($imgData);
@@ -120,9 +121,9 @@ if (isset($_SESSION['user_id'])) {
             imagettftext($posterImage, $fontSize, 0, 730, 940, $textColor, $font, $accountNo);
 
             // Define the path to save the merged image
-            $mergedImagePath = 'uploads/' . $user_id . '.png';
+            $mergedImagePath = '../uploads/' . $user_id . '.png';
 
-            // Save the merged image as a new file
+            // Save the merged image as a new file, overwriting the existing file
             imagepng($posterImage, $mergedImagePath);
 
             // Free up memory
@@ -132,13 +133,10 @@ if (isset($_SESSION['user_id'])) {
             imagedestroy($mask);
 
             // Construct the new image link
-            $newImageLink = '../' . $mergedImagePath;
+            $newImageLink = '../uploads/' . $user_id . '.png';
 
+            // Update the database with the new image URL
             $stmt->free_result();
-
-            // Update the database with the new image URL, replacing the old one
-            // Keep the rest of the 'images' column data intact, only replacing the existing image URL
-            $updatedImages = str_replace($existingImages, $newImageLink, $existingImages);
 
             // Prepare the UPDATE query
             $query1 = "UPDATE makueni SET images = ? WHERE member_id = ?";
@@ -150,7 +148,7 @@ if (isset($_SESSION['user_id'])) {
             }
 
             // Bind parameters and execute the UPDATE query
-            $stmt1->bind_param("si", $updatedImages, $user_id);
+            $stmt1->bind_param("si", $newImageLink, $user_id);
             if (!$stmt1->execute()) {
                 echo "Error executing the UPDATE query: " . $stmt1->error;
                 exit();
