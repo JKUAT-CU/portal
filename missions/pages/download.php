@@ -75,20 +75,7 @@ $conn->close();
     </div>
 </div>
 
-<!-- <div class="container">
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <div class="image-container">
-                <div style="height: 70%; width: 70%; border: .8vh solid red; border-radius: 5%;">
-                    <!-- Image will be displayed here -->
-                    <img src="<?php echo $attend_image. '?timestamp=' . time(); ?>" alt="Image Preview" style="height: 100%; width: 100%;">
-                    <!-- Download button -->
-                    <a class="btn btn-primary mt-3 downloadButton" href="<?php echo $attend_image; ?>" download="samburuattend.jpg">Download Poster</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
+
 
 <script>
     // Function to trigger download when the button is clicked

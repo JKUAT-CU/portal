@@ -79,32 +79,32 @@
     const CiM = {
       myCropme: null,
       options: {
-  "container": {
-    "width": "100%",
-    "height": "100%"
-  },
-  "viewport": {
-    "width": 200,
-    "height": 200,
-    "type": "circle",
-    "border": {
-      "width": 2,
-      "enable": true,
-      "color": "#FF0000"
-    }
-  },
-  "zoom": {
-    "enable": true,
-    "mouseWheel": true,
-    "slider": true
-  },
-  "rotation": {
-    "slider": true,
-    "enable": true,
-    "position": "left"
-  },
-  "transformOrigin": "image"
-},
+        "container": {
+          "width": "100%",
+          "height": "100%"
+        },
+        "viewport": {
+          "width": 200,
+          "height": 200,
+          "type": "circle",
+          "border": {
+            "width": 2,
+            "enable": true,
+            "color": "#FF0000"
+          }
+        },
+        "zoom": {
+          "enable": true,
+          "mouseWheel": true,
+          "slider": true
+        },
+        "rotation": {
+          "slider": true,
+          "enable": true,
+          "position": "left"
+        },
+        "transformOrigin": "image"
+      },
 
       cropImage(img, callback) {
         if (this.myCropme) {
@@ -168,28 +168,7 @@
         }
       },
 
-      saveImageLocally(img, callback) {
-        const imgCanvas = document.createElement("canvas");
-        const imgContext = imgCanvas.getContext("2d");
-
-        imgCanvas.width = img.width;
-        imgCanvas.height = img.height;
-
-        imgContext.drawImage(img, 0, 0, img.width, img.height);
-
-        const dataURL = imgCanvas.toDataURL(); // This will save the image as Base64
-
-        // Simulate downloading the image as a file
-        const link = document.createElement('a');
-        link.href = dataURL;
-        link.download = 'cropped-image.png';
-        link.click();
-
-        // After the image is downloaded, pass it to the callback
-        if (callback) callback(dataURL);
-      },
-
-      uploadImage: function (dataURL, callback) {
+      uploadImage(dataURL, callback) {
         $.ajax({
           type: "POST",
           url: "./post.php", // Replace with your backend script URL
@@ -233,16 +212,15 @@
       // Save button functionality
       $("#imgModal-btnSave").click(() => {
         if (croppedImg.src) {
+          // Get Base64 data from the cropped image
+          const dataURL = croppedImg.src;
+
           // Save the cropped image locally and then upload to backend
-          CiM.saveImageLocally(croppedImg, (dataURL) => {
-            CiM.uploadImage(dataURL, (response) => {
-              console.log("Upload successful:", response);
-              $("#saved-img").attr("src", croppedImg.src); // Display saved image
-              $("#imgModal-dialog").modal("hide"); // Close modal
-            });
+          CiM.uploadImage(dataURL, (response) => {
+            console.log("Upload successful:", response);
+            $("#saved-img").attr("src", croppedImg.src); // Display saved image
+            $("#imgModal-dialog").modal("hide"); // Close modal
           });
-        } else {
-          alert("No cropped image to save!");
         }
       });
     });
