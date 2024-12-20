@@ -1,7 +1,6 @@
 <?php
-// Enable error logging (useful for production)
-ini_set('log_errors', 1);
-ini_set('error_log', '../../backend/logs/error.log'); // Adjust the path
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 include "../../backend/db.php"; // Ensure this file has the correct $mysqli variable
@@ -23,9 +22,10 @@ if (isset($_SESSION['user_id'])) {
         if ($stmt->fetch()) {
             // $image_url is now populated with the fetched value
         } else {
-            $image_url = "default_image_url_here.jpg"; // Use a default image
+            $image_url = "default.jpeg"; // Use a default image
         }
 
+        // Close statement if valid
         $stmt->close();
     } else {
         error_log("Query preparation failed: " . $mysqli->error);
@@ -38,6 +38,8 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Close connection
-$mysqli->close();
+// Close connection if valid
+if (isset($mysqli) && $mysqli instanceof mysqli) {
+    $mysqli->close();
+}
 ?>
