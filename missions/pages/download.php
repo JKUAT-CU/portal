@@ -11,7 +11,7 @@ if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
 
     // Prepare and execute query securely
-    $stmt = $mysqli->prepare("SELECT images, attend FROM makueni WHERE member_id = ?");
+    $stmt = $mysqli->prepare("SELECT images FROM makueni WHERE member_id = ?");
     if ($stmt) {
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
@@ -20,10 +20,10 @@ if (isset($_SESSION['user_id'])) {
         if ($result && $result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $image_url = $row["images"];
-            $attend_image = $row["attend"];
+  
         } else {
             $image_url = "No results";
-            $attend_image = "No results";
+           
         }
         $stmt->close();
     } else {
