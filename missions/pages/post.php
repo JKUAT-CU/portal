@@ -121,7 +121,7 @@ if (isset($_SESSION['user_id'])) {
             imagettftext($posterImage, $fontSize, 0, 730, 940, $textColor, $font, $accountNo);
 
             // Define the path to save the merged image
-            $mergedImagePath = '../uploads/' . $user_id . '.png';
+            $mergedImagePath = 'uploads/' . $user_id . '.png';
 
             // Save the merged image as a new file
             imagepng($posterImage, $mergedImagePath);
