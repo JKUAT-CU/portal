@@ -3,7 +3,7 @@
 $servername = "localhost";
 $username = "jkuatcu_daraja";
 $password = "K@^;daY0*j(n";
-$database = "jkuatcu_daraja";
+$database = "jkuatcu_data";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $database);
@@ -75,7 +75,7 @@ $conn->close();
     </div>
 </div>
 
-<div class="container">
+<!-- <div class="container">
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <div class="image-container">
@@ -88,7 +88,7 @@ $conn->close();
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <script>
     // Function to trigger download when the button is clicked
