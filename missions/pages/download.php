@@ -20,9 +20,10 @@ if (isset($_SESSION['user_id'])) {
         $stmt->bind_result($image_url);
 
         if ($stmt->fetch()) {
-            // $image_url is now populated with the fetched value
+            // If image URL is found, use it directly
         } else {
-            $image_url = "default.jpeg"; // Use a default image if no result
+            // Fallback image URL if no result is found
+            $image_url = "default.jpeg";
         }
 
         // Close statement after execution
@@ -43,3 +44,6 @@ if (isset($mysqli) && $mysqli instanceof mysqli) {
     $mysqli->close();
 }
 ?>
+
+<!-- Example HTML usage of the fetched image URL -->
+<img src="<?php echo htmlspecialchars($image_url); ?>" alt="User Image" />
