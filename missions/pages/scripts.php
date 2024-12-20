@@ -68,5 +68,5 @@
   </aside>
 </html>
 <?php
-   include "scripter.php";
+   include "script.php";
 ?>
