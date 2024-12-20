@@ -17,14 +17,14 @@ if ($conn->connect_error) {
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
     // Query to fetch image URL from the user table
-    $sql = "SELECT image, attend FROM user WHERE id = $user_id";
+    $sql = "SELECT images FROM makueni WHERE member_id = $user_id";
 
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
         // Output data of the first row
         $row = $result->fetch_assoc();
-        $image_url = $row["image"]; // Assuming the column name in your table is "image"
+        $image_url = $row["images"]; // Assuming the column name in your table is "image"
         $attend_image = $row["attend"]; // Assuming the column name in your table is "image"
     } else {
         $image_url = "0 results";
@@ -68,7 +68,7 @@ $conn->close();
                     <!-- Image will be displayed here -->
                     <img src="<?php echo $image_url . '?timestamp=' . time(); ?>" alt="Image Preview" style="height: 100%; width: 100%;">
                     <!-- Download button -->
-                    <a class="btn btn-primary mt-3 downloadButton" href="<?php echo $image_url; ?>" download="samburumission.jpg">Download Proforma</a>
+                    <a class="btn btn-primary mt-3 downloadButton" href="<?php echo $image_url; ?>" download="makueniproforma.jpg">Download Proforma</a>
                 </div>
             </div>
         </div>

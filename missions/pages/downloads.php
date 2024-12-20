@@ -17,7 +17,7 @@
     if(isset($_SESSION['user_id'])) {
         $user_id = $_SESSION['user_id'];
         // Query to fetch image URL from the user table
-        $userSql = "SELECT image FROM user WHERE id = '$user_id'";
+        $userSql = "SELECT images FROM user WHERE mambers_id = '$user_id'";
         $result = $conn->query($userSql);
 
         // Check if the query was successful
@@ -25,7 +25,7 @@
             if ($result->num_rows > 0) {
                 // Fetch the image path from the database
                 $row = $result->fetch_assoc();
-                $image_path = $row['image'];
+                $image_path = $row['images'];
                 // Check if the image path is empty
                 if (!empty($image_path)) {
                     include 'download.php';
