@@ -76,7 +76,7 @@ $conn->close();
 </div>
 <div class="container">
     <div class="row">
-                    <a id="changeImage" class="btn btn-primary mt-3" href="script.php">Change Image</a>
+                    <a id="changeImage" class="btn btn-primary mt-3" href="scripts.php">Change Image</a>
     </div>
 </div>
 
