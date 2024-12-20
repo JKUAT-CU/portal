@@ -1,7 +1,7 @@
 <?php
 // Database credentials
 $servername = "localhost";
-$username = "kuatcu_devs";
+$username = "jkuatcu_devs";
 $password = "#God@isAble!#";
 $database = "jkuatcu_data";
 
