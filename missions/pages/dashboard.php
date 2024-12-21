@@ -75,3 +75,78 @@ if (!empty($data)) {
     }
 }
 ?>
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- FontAwesome -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <style>
+    .card-text {
+      font-weight: bold;
+    }
+    .alert-success {
+      font-size: 1.2rem;
+    }
+    .btn-custom {
+      display: inline-block;
+      margin-top: 15px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body class="bg-light">
+  <div class="container mt-5">
+    <div class="card">
+      <div class="card-body">
+        <!-- Success Message -->
+        <div id="success-message"></div>
+
+        <!-- Mission Details -->
+        <h5 class="card-title text-primary">Mission Details</h5>
+        <p class="card-text text-muted">Date: <strong>17th May - 25th May 2025</strong></p>
+        <p class="card-text">Mission Cost: <span class="badge badge-primary" id="mission-cost"></span></p>
+        <p class="card-text">Paybill Number: <strong>921961</strong></p>
+        <p class="card-text">Account Number: <strong id="account-number"></strong></p>
+        <p class="card-text text-success">Amount Raised: <span id="total-amount">KES 0</span></p>
+        <p class="card-text text-danger">Balance: <span id="balance">KES 0</span></p>
+        
+        <!-- Add Proforma Button -->
+        <a href="proforma.php" class="btn btn-primary btn-custom">Get Proforma</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Default fallback values for PHP variables
+    const accountNumber = '<?php echo $accountNumber ?? "Unknown"; ?>';
+    const missionCost = <?php echo $missionCost ?? 0; ?>;
+    const totalAmount = <?php echo $totalAmount ?? 0; ?>;
+
+    // Calculate the balance
+    const balance = missionCost - totalAmount;
+
+    // Update the UI
+    document.getElementById('account-number').innerText = accountNumber === "SM24395" ? "Fundraiser" : accountNumber;
+    document.getElementById('mission-cost').innerText = `KES ${missionCost.toLocaleString()}`;
+    document.getElementById('total-amount').innerText = `KES ${totalAmount.toLocaleString()}`;
+    document.getElementById('balance').innerText = `KES ${balance.toLocaleString()}`;
+
+    // Display success message if balance is zero or less
+    if (balance <= 0) {
+      document.getElementById('success-message').innerHTML = `
+        <div class="alert alert-success" role="alert">
+          Congratulations 🎉🎉🎉! You have completed payment.
+        </div>`;
+    }
+  </script>
+</body>
+</html>
