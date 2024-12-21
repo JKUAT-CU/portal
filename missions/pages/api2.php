@@ -27,47 +27,70 @@ if ($resultMakueni->num_rows > 0) {
         $memberId = $makueniRow['member_id'];
         $accountNumber = $makueniRow['account_number'];
 
-        // Convert account_number to lowercase (or uppercase) for case-insensitive comparison
+        // Convert account_number to lowercase for case-insensitive comparison
         $accountNumberLower = strtolower($accountNumber);
 
-        // Fetch user details from users table
-        $sqlUser = "SELECT first_name, surname FROM cu_members WHERE id = $memberId";
-        $resultUser = $conn->query($sqlUser);
+        // Default first_name and surname values
+        $firstName = "Unknown";
+        $lastName = "Unknown";
 
-        if ($resultUser->num_rows > 0) {
-            $userRow = $resultUser->fetch_assoc();
-            $firstName = $userRow['first_name'];
-            $lastName = $userRow['surname'];
+        // Check for specific account numbers and override names
+        if (strtoupper($accountNumber) === "MM001") {
+            $firstName = "Missions";
+            $lastName = "Carwash";
+        } elseif (strtoupper($accountNumber) === "MM002") {
+            $firstName = "Missions";
+            $lastName = "Sales";
+        } elseif (strtoupper($accountNumber) === "MM003") {
+            $firstName = "Missions";
+            $lastName = "Fundraiser";
+        } elseif (stripos($accountNumberLower, 'makueni') !== false) {
+            // Handle all variations of 'makueni'
+            $firstName = "Missions";
+            $lastName = "Organisations";
+        } elseif (stripos($accountNumberLower, 'associates') !== false) {
+            // Handle all variations of 'associates'
+            $firstName = "Missions";
+            $lastName = "Associates";
+        } else {
+            // Fetch user details from cu_members table for other accounts
+            $sqlUser = "SELECT first_name, surname FROM cu_members WHERE id = $memberId";
+            $resultUser = $conn->query($sqlUser);
 
-            // Fetch transaction data via API endpoint
-            $apiUrl = "https://portal.jkuatcu.org/missions/pages/api1.php?account_number=" . urlencode($accountNumberLower);
-            $transactionData = file_get_contents($apiUrl);
+            if ($resultUser->num_rows > 0) {
+                $userRow = $resultUser->fetch_assoc();
+                $firstName = $userRow['first_name'];
+                $lastName = $userRow['surname'];
+            }
+        }
 
-            // If file_get_contents() fails, handle error
-            if ($transactionData === FALSE) {
-                $totalAmount = 0;
-            } else {
-                $transactionArray = json_decode($transactionData, true);
-                $totalAmount = 0;
+        // Fetch transaction data via API endpoint
+        $apiUrl = "https://portal.jkuatcu.org/missions/pages/api1.php?account_number=" . urlencode($accountNumberLower);
+        $transactionData = @file_get_contents($apiUrl);
 
+        // If file_get_contents() fails, handle error
+        $totalAmount = 0;
+        if ($transactionData !== FALSE) {
+            $transactionArray = json_decode($transactionData, true);
+
+            if ($transactionArray && is_array($transactionArray)) {
                 // Loop through the API response and sum up TransAmount where BillRefNumber matches account_number
                 foreach ($transactionArray as $transaction) {
-                    // Convert BillRefNumber to lowercase for case-insensitive comparison
                     if (strtolower($transaction['BillRefNumber']) === $accountNumberLower) {
-                        // Sum the TransAmount values
                         $totalAmount += (float) $transaction['TransAmount'];
                     }
                 }
             }
-
-            $response[] = [
-                'member_id' => $memberId,
-                'account_number' => $accountNumber,
-                'first_name' => $firstName,
-                'last_name' => $lastName,
-                'total_amount' => $totalAmount
-            ];
         }
+
+        // Add data to response
+        $response[] = [
+            'member_id' => $memberId,
+            'account_number' => $accountNumber,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'total_amount' => $totalAmount
+        ];
     }
 
     echo json_encode($response);
