@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 $host = 'localhost';
 $user = 'jkuatcu_devs';
 $password = '#God@isAble!#'; 
-$database = "jkuatcu_daraja";
+$database = "jkuatcu_data";
 
 $conn = new mysqli($host, $user, $password, $database);
 
