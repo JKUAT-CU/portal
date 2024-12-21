@@ -40,7 +40,7 @@ if ($resultMakueni->num_rows > 0) {
             $lastName = $userRow['surname'];
 
             // Fetch transaction data via API endpoint
-            $apiUrl = "http://localhost/admin/api?account_number=" . urlencode($accountNumberLower);
+            $apiUrl = "https://portal.jkuatcu.org/missions/pages/api1.php?account_number=" . urlencode($accountNumberLower);
             $transactionData = file_get_contents($apiUrl);
 
             // If file_get_contents() fails, handle error
