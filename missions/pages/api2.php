@@ -3,20 +3,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// // Define the fixed API key
-// define('API_KEY', '1d99e5708647f2a85298e64126d481a75654e69a2fd26a577d2ab0942a5240a8');
-
-// // Check for the API key in the headers
-// $headers = apache_request_headers();
-// $clientApiKey = $headers['X-API-KEY'] ?? null; // Fetch the key from the "X-API-KEY" header
-
-// // Validate the API key
-// if ($clientApiKey !== API_KEY) {
-//     http_response_code(403); // Forbidden
-//     echo json_encode(['error' => 'Invalid or missing API key']);
-//     exit();
-// }
-
 // Database connection details
 $host = 'localhost';
 $user = 'jkuatcu_devs';
@@ -29,7 +15,17 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-header('Content-Type: application/json');
+// Set headers for CORS
+header("Access-Control-Allow-Origin: *"); // Allow requests from all origins. Replace '*' with a specific domain for stricter policies.
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS"); // Specify allowed HTTP methods.
+// header("Access-Control-Allow-Headers: Content-Type, X-API-KEY"); // Specify allowed custom headers.
+header("Content-Type: application/json");
+
+// Preflight request handling for OPTIONS method
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
 // Fetch data from makueni table
 $sqlMakueni = "SELECT member_id, account_number FROM makueni";
