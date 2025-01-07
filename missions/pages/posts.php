@@ -27,7 +27,7 @@ if (isset($_SESSION['user_id'])) {
         }
 
         // Query to retrieve account number and existing images from the database using user_id
-        $userSql = "SELECT account_number, images FROM makueni WHERE member_id = ?";
+        $userSql = "SELECT account_number, images, amount FROM makueni WHERE member_id = ?";
 
         // Prepare and execute the SELECT query
         $stmt = $mysqli->prepare($userSql);
@@ -114,13 +114,14 @@ if (isset($_SESSION['user_id'])) {
 
             // Define text color and font properties
             $textColor = imagecolorallocate($posterImage, 255, 255, 255); // White color
+            $textColorAmount = imagecolorallocate($posterImage, 128, 0, 0); // Maroon color
             $font = realpath('../assets/fonts/Futura-Bold.ttf'); // Get the absolute path dynamically
             $fontSize = 38;
 
             // Add account number to the poster at the specified coordinates
             imagettftext($posterImage, $fontSize, 0, 730, 940, $textColor, $font, $accountNo);
             // Add the amount to the poster at the specified coordinates (676, 674)
-            imagettftext($posterImage, $fontSize, 0, 676, 674, $textColor, $font, number_format($amount));
+            imagettftext($posterImage, $fontSize, 0, 676, 674, $textColorAmount, $font, number_format($amount));
 
 
             // Define the path to save the merged image
