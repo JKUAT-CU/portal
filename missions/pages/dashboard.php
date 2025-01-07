@@ -4,6 +4,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+session_start();
+
 // API Key constant
 define('API_KEY', '1d99e5708647f2a85298e64126d481a75654e69a2fd26a577d2ab0942a5240a8');
 
@@ -35,48 +37,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Prepare the SQL query to update the amount
         $updateQuery = $mysqli->prepare("UPDATE makueni SET amount = ? WHERE member_id = ?");
-        
-        if ($updateQuery === false) {
-            echo json_encode(['status' => 'error', 'message' => 'Error preparing the update query.']);
-            error_log('Error preparing query: ' . $mysqli->error);
-            exit();
-        }
-
         $updateQuery->bind_param("ds", $newAmount, $user_id);
 
-        if ($updateQuery->execute()) {
-            echo json_encode([
-                'status' => 'success',
-                'message' => 'Amount updated successfully.',
-            ]);
-            // Ensure the JSON response is sent before redirecting
-            flush();
-            // Redirect to dashboard.php
-            header("Location: dashboard.php");
-            exit();
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Error executing the update query.']);
-            error_log('Error executing query: ' . $updateQuery->error);
-            exit();
-        }
-        
+if ($updateQuery->execute()) {
+    echo json_encode([
+        'status' => 'success',
+        'message' => 'Amount updated successfully.',
+    ]);
+    // Ensure the JSON response is sent before redirecting
+    flush();
+    // Redirect to dashboard.php
+    header("Location: dashboard.php");
+    exit();
+}
+
     } catch (Exception $e) {
         error_log($e->getMessage());
         echo json_encode(['status' => 'error', 'message' => 'An error occurred while updating the amount.']);
-    }
+    
     exit();
 }
 
 // Handle GET request for fetching user and mission details
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $userQuery = $mysqli->prepare("SELECT account_number, amount FROM makueni WHERE member_id = ?");
-    
-    if ($userQuery === false) {
-        echo json_encode(['status' => 'error', 'message' => 'Error preparing the select query.']);
-        error_log('Error preparing query: ' . $mysqli->error);
-        exit();
-    }
-
     $userQuery->bind_param("s", $user_id);
     $userQuery->execute();
     $userQuery->bind_result($accountNumber, $collectionAmount);
