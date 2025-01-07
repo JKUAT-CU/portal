@@ -117,7 +117,7 @@ if ($stmt->fetch()) {
     $textColorAmount = imagecolorallocate($posterImage, 128, 0, 0); // Maroon color
     $font = realpath('../assets/fonts/Futura-Bold.ttf'); // Get the absolute path dynamically
     $fontSize = 38;
-    $fontSizeAmount = 30;
+    $fontSizeAmount = 28;
 
     // Add account number to the poster at the specified coordinates
     imagettftext($posterImage, $fontSize, 0, 730, 940, $textColor, $font, $accountNo);

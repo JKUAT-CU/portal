@@ -112,16 +112,38 @@ if (isset($_SESSION['user_id'])) {
             // Merge the circular image onto the poster
             imagecopy($posterImage, $resizedImage, $x, $y, 0, 0, $diameter, $diameter);
 
-            // Define text color and font properties
-            $textColor = imagecolorallocate($posterImage, 255, 255, 255); // White color
-            $font = realpath('../assets/fonts/Futura-Bold.ttf'); // Get the absolute path dynamically
-            $fontSize = 38;
+// Define text color and font properties
+$textColor = imagecolorallocate($posterImage, 255, 255, 255); // White color
+$textColorAmount = imagecolorallocate($posterImage, 128, 0, 0); // Maroon color
+$font = realpath('../assets/fonts/Futura-Bold.ttf'); // Get the absolute path dynamically
+$fontSize = 38;
+$fontSizeAmount = 28;
 
-            // Add account number to the poster at the specified coordinates
-            imagettftext($posterImage, $fontSize, 0, 730, 940, $textColor, $font, $accountNo);
+// Add account number to the poster at the specified coordinates
+imagettftext($posterImage, $fontSize, 0, 730, 940, $textColor, $font, $accountNo);
+// Add the amount to the poster at the specified coordinates (676, 674)
+// Format the amount as a string
+$formattedAmount = number_format($amount);
 
-            // Add the amount to the poster at the specified coordinates (676, 674)
-            imagettftext($posterImage, $fontSize, 0, 676, 674, $textColor, $font, "Amount: KES " . number_format($amount));
+// Get the bounding box of the amount text
+$bbox = imagettfbbox($fontSizeAmount, 0, $font, $formattedAmount);
+$textWidth = $bbox[2] - $bbox[0]; // Width of the text
+
+// Set the minimum and maximum x-coordinates for the amount text
+$minX = 666;
+$maxX = 787;
+
+// Check if the text width exceeds the maximum allowable width
+if ($textWidth > ($maxX - $minX)) {
+// If the text is too wide, set x to $minX (it will be cut off if too wide)
+$xCoordinate = $minX;
+} else {
+// Otherwise, center the text within the allowed range
+$xCoordinate = $minX + ($maxX - $minX - $textWidth) / 2;
+}
+
+// Add the amount to the poster at the calculated x-coordinate
+imagettftext($posterImage, $fontSizeAmount, 0, $xCoordinate, 674, $textColorAmount, $font, $formattedAmount);
 
             // Define the path to save the merged image
             $mergedImagePath = 'uploads/' . $user_id . '.png';
