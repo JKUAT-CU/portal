@@ -35,6 +35,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Prepare the SQL query to update the amount
         $updateQuery = $mysqli->prepare("UPDATE makueni SET amount = ? WHERE member_id = ?");
+        
+        if ($updateQuery === false) {
+            echo json_encode(['status' => 'error', 'message' => 'Error preparing the update query.']);
+            error_log('Error preparing query: ' . $mysqli->error);
+            exit();
+        }
+
         $updateQuery->bind_param("ds", $newAmount, $user_id);
 
         if ($updateQuery->execute()) {
@@ -46,6 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             flush();
             // Redirect to dashboard.php
             header("Location: dashboard.php");
+            exit();
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Error executing the update query.']);
+            error_log('Error executing query: ' . $updateQuery->error);
             exit();
         }
         
@@ -59,6 +70,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Handle GET request for fetching user and mission details
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $userQuery = $mysqli->prepare("SELECT account_number, amount FROM makueni WHERE member_id = ?");
+    
+    if ($userQuery === false) {
+        echo json_encode(['status' => 'error', 'message' => 'Error preparing the select query.']);
+        error_log('Error preparing query: ' . $mysqli->error);
+        exit();
+    }
+
     $userQuery->bind_param("s", $user_id);
     $userQuery->execute();
     $userQuery->bind_result($accountNumber, $collectionAmount);
