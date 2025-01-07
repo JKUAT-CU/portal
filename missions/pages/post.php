@@ -130,8 +130,8 @@ $bbox = imagettfbbox($fontSizeAmount, 0, $font, $formattedAmount);
 $textWidth = $bbox[2] - $bbox[0]; // Width of the text
 
 // Set the minimum and maximum x-coordinates for the amount text
-$minX = 666;
-$maxX = 787;
+$minX = 662;
+$maxX = 780;
 
 // Check if the text width exceeds the maximum allowable width
 if ($textWidth > ($maxX - $minX)) {
