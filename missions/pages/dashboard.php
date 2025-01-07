@@ -4,8 +4,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-session_start();
-
 // API Key constant
 define('API_KEY', '1d99e5708647f2a85298e64126d481a75654e69a2fd26a577d2ab0942a5240a8');
 
@@ -39,22 +37,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updateQuery = $mysqli->prepare("UPDATE makueni SET amount = ? WHERE member_id = ?");
         $updateQuery->bind_param("ds", $newAmount, $user_id);
 
-if ($updateQuery->execute()) {
-    echo json_encode([
-        'status' => 'success',
-        'message' => 'Amount updated successfully.',
-    ]);
-    // Ensure the JSON response is sent before redirecting
-    flush();
-    // Redirect to dashboard.php
-    header("Location: dashboard.php");
-    exit();
-}
-
+        if ($updateQuery->execute()) {
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Amount updated successfully.',
+            ]);
+            // Ensure the JSON response is sent before redirecting
+            flush();
+            // Redirect to dashboard.php
+            header("Location: dashboard.php");
+            exit();
+        }
+        
     } catch (Exception $e) {
         error_log($e->getMessage());
         echo json_encode(['status' => 'error', 'message' => 'An error occurred while updating the amount.']);
-    
+    }
     exit();
 }
 
