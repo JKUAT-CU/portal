@@ -26,8 +26,8 @@ if (isset($_SESSION['user_id'])) {
             exit();
         }
 
-        // Query to retrieve account number from the database using user_id
-        $userSql = "SELECT account_number FROM makueni WHERE member_id = ?";
+        // Query to retrieve account number and amount from the database using user_id
+        $userSql = "SELECT account_number, amount FROM makueni WHERE member_id = ?";
 
         // Prepare and execute the SELECT query
         $stmt = $mysqli->prepare($userSql);
@@ -40,7 +40,7 @@ if (isset($_SESSION['user_id'])) {
         $stmt->execute();
 
         // Bind the result variables
-        $stmt->bind_result($accountNo);
+        $stmt->bind_result($accountNo, $amount);
 
         // Fetch the results
         if ($stmt->fetch()) {
@@ -119,6 +119,9 @@ if (isset($_SESSION['user_id'])) {
 
             // Add account number to the poster at the specified coordinates
             imagettftext($posterImage, $fontSize, 0, 730, 940, $textColor, $font, $accountNo);
+
+            // Add the amount to the poster at the specified coordinates (676, 674)
+            imagettftext($posterImage, $fontSize, 0, 676, 674, $textColor, $font, "Amount: KES " . number_format($amount));
 
             // Define the path to save the merged image
             $mergedImagePath = 'uploads/' . $user_id . '.png';

@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Fetch data from makueni table
-$sqlMakueni = "SELECT member_id, account_number FROM makueni";
+$sqlMakueni = "SELECT member_id, account_number,amount FROM makueni";
 $resultMakueni = $conn->query($sqlMakueni);
 
 if ($resultMakueni->num_rows > 0) {
