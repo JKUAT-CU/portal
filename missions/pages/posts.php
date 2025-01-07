@@ -119,6 +119,9 @@ if (isset($_SESSION['user_id'])) {
 
             // Add account number to the poster at the specified coordinates
             imagettftext($posterImage, $fontSize, 0, 730, 940, $textColor, $font, $accountNo);
+            // Add the amount to the poster at the specified coordinates (676, 674)
+            imagettftext($posterImage, $fontSize, 0, 676, 674, $textColor, $font, "Amount: KES " . number_format($amount));
+
 
             // Define the path to save the merged image
             $mergedImagePath = '../uploads/' . $user_id . '.png';
