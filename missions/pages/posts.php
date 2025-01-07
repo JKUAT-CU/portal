@@ -117,12 +117,12 @@ if ($stmt->fetch()) {
     $textColorAmount = imagecolorallocate($posterImage, 128, 0, 0); // Maroon color
     $font = realpath('../assets/fonts/Futura-Bold.ttf'); // Get the absolute path dynamically
     $fontSize = 38;
-    $fontSizeAmount = 33;
+    $fontSizeAmount = 30;
 
     // Add account number to the poster at the specified coordinates
     imagettftext($posterImage, $fontSize, 0, 730, 940, $textColor, $font, $accountNo);
     // Add the amount to the poster at the specified coordinates (676, 674)
-    imagettftext($posterImage, $fontSizeAmount, 0, 676, 674, $textColorAmount, $font, number_format($amount));
+    imagettftext($posterImage, $fontSizeAmount, 0, 669, 674, $textColorAmount, $font, number_format($amount));
 
     // Define the path to save the merged image
     $mergedImagePath = '../uploads/' . $user_id . '.png';
