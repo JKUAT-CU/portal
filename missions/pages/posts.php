@@ -117,7 +117,7 @@ if ($stmt->fetch()) {
     $textColorAmount = imagecolorallocate($posterImage, 128, 0, 0); // Maroon color
     $font = realpath('../assets/fonts/Futura-Bold.ttf'); // Get the absolute path dynamically
     $fontSize = 38;
-    $fontSizeAmount = 28;
+    $fontSizeAmount = 26;
 
     // Add account number to the poster at the specified coordinates
     imagettftext($posterImage, $fontSize, 0, 730, 940, $textColor, $font, $accountNo);
@@ -131,7 +131,7 @@ $textWidth = $bbox[2] - $bbox[0]; // Width of the text
 
 // Set the minimum and maximum x-coordinates for the amount text
 $minX = 662;
-$maxX = 780;
+$maxX = 770;
 
 // Check if the text width exceeds the maximum allowable width
 if ($textWidth > ($maxX - $minX)) {
