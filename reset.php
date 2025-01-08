@@ -34,7 +34,10 @@
         }
         .password-toggle {
             cursor: pointer;
-            color: #FFFFFF; /* White for the toggle icon */
+            color: #800000; /* Maroon for the toggle icon */
+        }
+        .password-toggle:hover {
+            color: #A0522D; /* Slightly lighter Maroon for hover */
         }
     </style>
 </head>
