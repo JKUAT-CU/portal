@@ -59,27 +59,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // $log[] = "Password: $password";
     // $log[] = "Password Confirmation: $password_confirmation";
 
-    // Check if email already exists
-    $emailCheckSql = "SELECT * FROM cu_members WHERE email = ? LIMIT 1";
-    $emailCheckStmt = $mysqli->prepare($emailCheckSql);
-    if (!$emailCheckStmt) {
-        $log[] = "Prepare failed for email check: (" . $mysqli->errno . ") " . $mysqli->error;
-    }
+        // Check if email already exists
+        $emailCheckSql = "SELECT id FROM cu_members WHERE email = ? LIMIT 1";
+        $emailCheckStmt = $mysqli->prepare($emailCheckSql);
+        $emailCheckStmt->bind_param("s", $email);
+        $emailCheckStmt->execute();
 
-    $emailCheckStmt->bind_param("s", $email);
-    if (!$emailCheckStmt->execute()) {
-        $log[] = "Execute failed for email check: (" . $emailCheckStmt->errno . ") " . $emailCheckStmt->error;
-    }
+        // Use bind_result() to fetch the result
+        $emailCheckStmt->bind_result($result);
+        $emailExists = $emailCheckStmt->fetch();
 
-    $emailCheckResult = $emailCheckStmt->get_result();
+        if ($emailExists) {
+            $response['valid'] = false;
+            $response['message'] = "The email address is already registered.";
+            $log[] = $response['message'];
+        } else {
+            $log[] = "Email is not registered. Proceeding to check registration number.";
+        }
 
-    if ($emailCheckResult->num_rows > 0) {
-        $response['valid'] = false;
-        $response['message'] = "The email address is already registered.";
-        $log[] = $response['message'];
-    } else {
-        $log[] = "Email is not registered. Proceeding to check registration number.";
-    }
+        $emailCheckStmt->close();
+
 
     // Check if registration number already exists
     $regNumberCheckSql = "SELECT * FROM cu_members WHERE registration_number = ? LIMIT 1";
