@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate password and confirm password
     if ($password !== $confirmPassword) {
         $_SESSION['error'] = "Passwords do not match";
-        header("Location: pages/reset.php?token=$token");
+        header("Location: reset.php?token=$token");
         exit();
     }
 
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmtCheckToken->num_rows === 0) {
             $_SESSION['error'] = "Invalid token";
-            header("Location: pages/reset.php?token=$token");
+            header("Location: reset.php?token=$token");
             exit();
         }
 
@@ -74,26 +74,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Password updated successfully
                 $_SESSION['success'] = "Password reset successful. You can now login with your new password.";
-                header("Location: pages/signin.php");
+                header("Location: login.php");
                 exit();
             } else {
                 $_SESSION['error'] = "Failed to update password";
-                header("Location: pages/reset.php?token=$token");
+                header("Location: reset.php?token=$token");
                 exit();
             }
         } else {
             $_SESSION['error'] = "Failed to prepare statement for updating password: " . $conn->error;
-            header("Location: pages/reset.php?token=$token");
+            header("Location: reset.php?token=$token");
             exit();
         }
     } else {
         $_SESSION['error'] = "Failed to prepare statement for checking token: " . $conn->error;
-        header("Location: pages/reset.php?token=$token");
+        header("Location: reset.php?token=$token");
         exit();
     }
 } else {
     $_SESSION['error'] = "Invalid request method";
-    header("Location: pages/reset.php");
+    header("Location: reset.php");
     exit();
 }
 ?>
