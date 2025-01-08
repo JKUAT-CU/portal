@@ -41,6 +41,7 @@ if (isset($_SESSION['user_id'])) {
 
         // Bind the result variables
         $stmt->bind_result($accountNo, $amount);
+        $amount = $amount ?? 1700;
 
         // Fetch the results
         if ($stmt->fetch()) {
