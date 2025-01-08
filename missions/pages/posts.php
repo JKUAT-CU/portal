@@ -39,9 +39,8 @@ if (isset($_SESSION['user_id'])) {
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
 
-       // Bind the result variables
-        $stmt->bind_result($accountNo, $existingImages, $amount);
-        $amount = $amount ?? 1700;
+ // Bind the result variables, including the amount
+$stmt->bind_result($accountNo, $existingImages, $amount);
 
 // Fetch the results
 if ($stmt->fetch()) {
