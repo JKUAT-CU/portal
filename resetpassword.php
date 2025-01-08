@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Success
         $_SESSION['success'] = "Password reset successful. You can now log in with your new password.";
-        header("Location: login.php");
+        // header("Location: login.php");
         exit();
     } else {
         $_SESSION['error'] = "Failed to update password";
