@@ -1,4 +1,5 @@
 <?php
+session_start(); // Start session management
 require 'backend/db.php'; // Include the database connection
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -9,13 +10,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate password and confirm password
     if (empty($password) || empty($confirmPassword)) {
         $_SESSION['error'] = "Password fields cannot be empty";
-        header("Location: reset.php?token=$token");
+        header("Location: reset.php?token=" . urlencode($token));
         exit();
     }
 
     if ($password !== $confirmPassword) {
         $_SESSION['error'] = "Passwords do not match";
-        header("Location: reset.php?token=$token");
+        header("Location: reset.php?token=" . urlencode($token));
         exit();
     }
 
@@ -26,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$stmtCheckToken) {
         $_SESSION['error'] = "Error preparing token check statement: " . $mysqli->error;
-        header("Location: reset.php?token=$token");
+        header("Location: reset.php?token=" . urlencode($token));
         exit();
     }
 
@@ -36,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($stmtCheckToken->num_rows === 0) {
         $_SESSION['error'] = "Invalid or expired token";
-        header("Location: reset.php?token=$token");
+        header("Location: reset.php?token=" . urlencode($token));
         exit();
     }
 
@@ -44,9 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmtCheckToken->fetch();
 
     // Validate token usage and expiration
-    if ($used || $minutesPassed > 60) { // Token is marked as used or expired
+    if ($used || $minutesPassed > 60) {
         $_SESSION['error'] = "Token has expired or already been used";
-        header("Location: reset.php?token=$token");
+        header("Location: reset.php?token=" . urlencode($token));
         exit();
     }
     $stmtCheckToken->close();
@@ -60,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$stmtUpdatePassword) {
         $_SESSION['error'] = "Error preparing password update statement: " . $mysqli->error;
-        header("Location: reset.php?token=$token");
+        header("Location: reset.php?token=" . urlencode($token));
         exit();
     }
 
@@ -84,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     } else {
         $_SESSION['error'] = "Failed to update password";
-        header("Location: reset.php?token=$token");
+        header("Location: reset.php?token=" . urlencode($token));
         exit();
     }
 } else {
