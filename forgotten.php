@@ -6,14 +6,7 @@ use PHPMailer\PHPMailer\Exception;
 
 require 'vendor/autoload.php';
 
-// Database credentials
-$servername = "localhost";
-$username = "jkuatcu_daraja";
-$password = "K@^;daY0*j(n";
-$database = "jkuatcu_daraja";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $database);
+require 'backend/db.php';
 
 // Check connection
 if ($conn->connect_error) {
