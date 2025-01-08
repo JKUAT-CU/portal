@@ -64,9 +64,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mail->addAddress($email);
 
         // Email subject and body
-        $mail->Subject = "Password Reset";
-        $resetPasswordLink = "https://portal.jkuatcu.org/reset.php?token=$token";
-        $mail->Body = "Click the following link to reset your password: $resetPasswordLink";
+$mail->Subject = "Password Reset Request";
+
+$resetPasswordLink = "https://portal.jkuatcu.org/reset.php?token=$token";
+
+$mail->Body = "
+    <html>
+    <head>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #333333;
+                background-color: #f9f9f9;
+                margin: 0;
+                padding: 0;
+            }
+            .email-container {
+                max-width: 600px;
+                margin: 20px auto;
+                background: #ffffff;
+                border: 1px solid #dddddd;
+                border-radius: 8px;
+                padding: 20px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            h2 {
+                color: #800000; /* Maroon */
+            }
+            a {
+                color: #8B4513; /* Olden Brown */
+                text-decoration: none;
+                font-weight: bold;
+            }
+            a:hover {
+                color: #A0522D; /* Slightly lighter Olden Brown */
+            }
+            .footer {
+                margin-top: 20px;
+                font-size: 12px;
+                color: #666666;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class='email-container'>
+            <h2>Password Reset Request</h2>
+            <p>Hello,</p>
+            <p>We received a request to reset the password for your account. If this was you, please click the link below to reset your password:</p>
+            <p><a href='$resetPasswordLink'>$resetPasswordLink</a></p>
+            <p>If you did not request this, please disregard this email. Your account remains secure.</p>
+            <p>Do not share this email or the link with anyone.</p>
+            <div class='footer'>
+                <p>&copy; " . date("Y") . " JKUAT CU Portal</p>
+            </div>
+        </div>
+    </body>
+    </html>";
 
         // Send email
         $mail->send();
