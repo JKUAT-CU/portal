@@ -26,7 +26,7 @@ if (isset($_SESSION['user_id'])) {
             exit();
         }
 
-        // Query to retrieve account number and amount from the database using user_id
+        // Query to retrieve account number and existing images from the database using user_id
         $userSql = "SELECT account_number, amount FROM makueni WHERE member_id = ?";
 
         // Prepare and execute the SELECT query
@@ -39,90 +39,90 @@ if (isset($_SESSION['user_id'])) {
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
 
-        // Bind the result variables
-        $stmt->bind_result($accountNo, $amount);
-  $mount=  $amount;
-        // Fetch the results
-        if ($stmt->fetch()) {
-            // Define the default poster image path
-            $defaultPosterPath = '../uploads/makueni.png';
-             // Create a new true-color image with the dimensions of the default poster
-             list($posterWidth, $posterHeight) = getimagesize($defaultPosterPath);
-             $posterImage = imagecreatetruecolor($posterWidth, $posterHeight);
- 
-             // Fill the poster image with a specific background color (e.g., white)
-             $backgroundColor = imagecolorallocate($posterImage, 255, 255, 255); // White background
-             imagefill($posterImage, 0, 0, $backgroundColor);
- 
-             // Load the default poster image onto the new canvas
-             $defaultPosterImage = imagecreatefrompng($defaultPosterPath);
-             imagecopy($posterImage, $defaultPosterImage, 0, 0, 0, 0, $posterWidth, $posterHeight);
- 
+ // Bind the result variables, including the amount
+$stmt->bind_result($accountNo, $amount);
 
-            // Create a new image from the uploaded image data
-            $uploadedImage = imagecreatefromstring($imgData);
+// Fetch the results
+if ($stmt->fetch()) {
+    // Define the default poster image path
+    $defaultPosterPath = '../uploads/makueni.png';
+    
+    // Create a new true-color image with the dimensions of the default poster
+    list($posterWidth, $posterHeight) = getimagesize($defaultPosterPath);
+    $posterImage = imagecreatetruecolor($posterWidth, $posterHeight);
+    
+    // Fill the poster image with a specific background color (e.g., white)
+    $backgroundColor = imagecolorallocate($posterImage, 255, 255, 255); // White background
+    imagefill($posterImage, 0, 0, $backgroundColor);
+    
+    // Load the default poster image onto the new canvas
+    $defaultPosterImage = imagecreatefrompng($defaultPosterPath);
+    imagecopy($posterImage, $defaultPosterImage, 0, 0, 0, 0, $posterWidth, $posterHeight);
 
-            // Get the dimensions of the uploaded image
-            $uploadedImageWidth = imagesx($uploadedImage);
-            $uploadedImageHeight = imagesy($uploadedImage);
+    // Create a new image from the uploaded image data
+    $uploadedImage = imagecreatefromstring($imgData);
 
-            // Desired radius and center
-            $radius = 220; // Radius of the circular area
-            $centerX = 230; // X-coordinate of the center
-            $centerY = 570; // Y-coordinate of the center
+    // Get the dimensions of the uploaded image
+    $uploadedImageWidth = imagesx($uploadedImage);
+    $uploadedImageHeight = imagesy($uploadedImage);
 
-            // Calculate the diameter of the circle
-            $diameter = $radius * 2;
+    // Desired radius and center
+    $radius = 220; // Radius of the circular area
+    $centerX = 230; // X-coordinate of the center
+    $centerY = 570; // Y-coordinate of the center
 
-            // Resize the uploaded image to fit within the circle's diameter
-            $resizedImage = imagecreatetruecolor($diameter, $diameter);
-            imagealphablending($resizedImage, true);
-            imagesavealpha($resizedImage, true);
-            $transparent = imagecolorallocatealpha($resizedImage, 0, 0, 0, 127);
-            imagefill($resizedImage, 0, 0, $transparent);
+    // Calculate the diameter of the circle
+    $diameter = $radius * 2;
 
-            imagecopyresampled(
-                $resizedImage,
-                $uploadedImage,
-                0, 0, 0, 0,
-                $diameter, $diameter,
-                $uploadedImageWidth, $uploadedImageHeight
-            );
+    // Resize the uploaded image to fit within the circle's diameter
+    $resizedImage = imagecreatetruecolor($diameter, $diameter);
+    imagealphablending($resizedImage, true);
+    imagesavealpha($resizedImage, true);
+    $transparent = imagecolorallocatealpha($resizedImage, 0, 0, 0, 127);
+    imagefill($resizedImage, 0, 0, $transparent);
 
-            // Create a circular mask
-            $mask = imagecreatetruecolor($diameter, $diameter);
-            $maskColor = imagecolorallocate($mask, 0, 0, 0);
-            $transparentMask = imagecolorallocate($mask, 255, 255, 255);
-            imagefill($mask, 0, 0, $transparentMask);
-            imagefilledellipse($mask, $radius, $radius, $diameter, $diameter, $maskColor);
+    imagecopyresampled(
+        $resizedImage,
+        $uploadedImage,
+        0, 0, 0, 0,
+        $diameter, $diameter,
+        $uploadedImageWidth, $uploadedImageHeight
+    );
 
-            // Apply the mask to the resized image
-            for ($x = 0; $x < $diameter; $x++) {
-                for ($y = 0; $y < $diameter; $y++) {
-                    if (imagecolorat($mask, $x, $y) !== $maskColor) {
-                        imagesetpixel($resizedImage, $x, $y, $transparent);
-                    }
-                }
+    // Create a circular mask
+    $mask = imagecreatetruecolor($diameter, $diameter);
+    $maskColor = imagecolorallocate($mask, 0, 0, 0);
+    $transparentMask = imagecolorallocate($mask, 255, 255, 255);
+    imagefill($mask, 0, 0, $transparentMask);
+    imagefilledellipse($mask, $radius, $radius, $diameter, $diameter, $maskColor);
+
+    // Apply the mask to the resized image
+    for ($x = 0; $x < $diameter; $x++) {
+        for ($y = 0; $y < $diameter; $y++) {
+            if (imagecolorat($mask, $x, $y) !== $maskColor) {
+                imagesetpixel($resizedImage, $x, $y, $transparent);
             }
+        }
+    }
 
-            // Position the circular image on the poster
-            $x = $centerX - $radius;
-            $y = $centerY - $radius;
+    // Position the circular image on the poster
+    $x = $centerX - $radius;
+    $y = $centerY - $radius;
 
-            // Merge the circular image onto the poster
-            imagecopy($posterImage, $resizedImage, $x, $y, 0, 0, $diameter, $diameter);
+    // Merge the circular image onto the poster
+    imagecopy($posterImage, $resizedImage, $x, $y, 0, 0, $diameter, $diameter);
 
-// Define text color and font properties
-$textColor = imagecolorallocate($posterImage, 255, 255, 255); // White color
-$textColorAmount = imagecolorallocate($posterImage, 128, 0, 0); // Maroon color
-$font = realpath('../assets/fonts/Futura-Bold.ttf'); // Get the absolute path dynamically
-$fontSize = 38;
-$fontSizeAmount = 26;
+    // Define text color and font properties
+    $textColor = imagecolorallocate($posterImage, 255, 255, 255); // White color
+    $textColorAmount = imagecolorallocate($posterImage, 128, 0, 0); // Maroon color
+    $font = realpath('../assets/fonts/Futura-Bold.ttf'); // Get the absolute path dynamically
+    $fontSize = 38;
+    $fontSizeAmount = 26;
 
-// Add account number to the poster at the specified coordinates
-imagettftext($posterImage, $fontSize, 0, 730, 940, $textColor, $font, $accountNo);
-// Add the amount to the poster at the specified coordinates (676, 674)
-// Format the amount as a string
+    // Add account number to the poster at the specified coordinates
+    imagettftext($posterImage, $fontSize, 0, 730, 940, $textColor, $font, $accountNo);
+    // Add the amount to the poster at the specified coordinates (676, 674)
+    // Format the amount as a string
 $formattedAmount = number_format($amount);
 
 // Get the bounding box of the amount text
@@ -135,55 +135,57 @@ $maxX = 770;
 
 // Check if the text width exceeds the maximum allowable width
 if ($textWidth > ($maxX - $minX)) {
-// If the text is too wide, set x to $minX (it will be cut off if too wide)
-$xCoordinate = $minX;
+    // If the text is too wide, set x to $minX (it will be cut off if too wide)
+    $xCoordinate = $minX;
 } else {
-// Otherwise, center the text within the allowed range
-$xCoordinate = $minX + ($maxX - $minX - $textWidth) / 2;
+    // Otherwise, center the text within the allowed range
+    $xCoordinate = $minX + ($maxX - $minX - $textWidth) / 2;
 }
 
 // Add the amount to the poster at the calculated x-coordinate
 imagettftext($posterImage, $fontSizeAmount, 0, $xCoordinate, 674, $textColorAmount, $font, $formattedAmount);
 
-            // Define the path to save the merged image
-            $mergedImagePath = 'uploads/' . $user_id . '.png';
+    // Define the path to save the merged image
+    $mergedImagePath = '../uploads/' . $user_id . '.png';
 
-            // Save the merged image as a new file
-            imagepng($posterImage, $mergedImagePath);
+    // Save the merged image as a new file, overwriting the existing file
+    imagepng($posterImage, $mergedImagePath);
 
-            // Free up memory
-            imagedestroy($posterImage);
-            imagedestroy($uploadedImage);
-            imagedestroy($resizedImage);
-            imagedestroy($mask);
+    // Free up memory
+    imagedestroy($posterImage);
+    imagedestroy($uploadedImage);
+    imagedestroy($resizedImage);
+    imagedestroy($mask);
 
-            // Update the database with the image link
-            $imageLink1 = '../' . $mergedImagePath;
+    // Construct the new image link
+    $newImageLink = '../uploads/' . $user_id . '.png';
 
-            $stmt->free_result();
+    // Update the database with the new image URL
+    $stmt->free_result();
 
-            // Prepare the UPDATE query
-            $query1 = "UPDATE makueni SET images = ? WHERE member_id = ?";
-            $stmt1 = $mysqli->prepare($query1);
+    // Prepare the UPDATE query
+    $query1 = "UPDATE makueni SET images = ? WHERE member_id = ?";
+    $stmt1 = $mysqli->prepare($query1);
 
-            if ($stmt1 === false) {
-                echo "Error preparing UPDATE query: " . $mysqli->error;
-                exit();
-            }
+    if ($stmt1 === false) {
+        echo "Error preparing UPDATE query: " . $mysqli->error;
+        exit();
+    }
 
-            // Bind parameters and execute the UPDATE query
-            $stmt1->bind_param("si", $imageLink1, $user_id);
-            if (!$stmt1->execute()) {
-                echo "Error executing the UPDATE query: " . $stmt1->error;
-                exit();
-            }
+    // Bind parameters and execute the UPDATE query
+    $stmt1->bind_param("si", $newImageLink, $user_id);
+    if (!$stmt1->execute()) {
+        echo "Error executing the UPDATE query: " . $stmt1->error;
+        exit();
+    }
 
-            // Successfully updated image link
-            echo "Image uploaded and database updated successfully.";
-        } else {
-            // Handle the case where no account information is found
-            echo "Error: Unable to retrieve account information.";
-        }
+    // Successfully updated image link
+    echo "Image uploaded and database updated successfully.";
+} else {
+    // Handle the case where no account information is found
+    echo "Error: Unable to retrieve account information.";
+}
+
 
         // Free result and close the prepared statement
         $stmt->close();
