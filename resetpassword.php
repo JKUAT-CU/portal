@@ -1,13 +1,5 @@
 <?php
-require 'backend/db.php';
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $database);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require 'backend/db.php'; // Include the database connection
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['new_password'] ?? '';
@@ -30,10 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Check if token exists and is valid
     $checkTokenQuery = "SELECT email, used, TIMESTAMPDIFF(MINUTE, created_at, NOW()) AS minutes_passed 
                         FROM password_reset WHERE token = ?";
-    $stmtCheckToken = $conn->prepare($checkTokenQuery);
-    
+    $stmtCheckToken = $mysqli->prepare($checkTokenQuery);
+
     if (!$stmtCheckToken) {
-        $_SESSION['error'] = "Error preparing token check statement: " . $conn->error;
+        $_SESSION['error'] = "Error preparing token check statement: " . $mysqli->error;
         header("Location: reset.php?token=$token");
         exit();
     }
@@ -64,10 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Update the user's password
     $updatePasswordQuery = "UPDATE user SET password = ? WHERE email = ?";
-    $stmtUpdatePassword = $conn->prepare($updatePasswordQuery);
+    $stmtUpdatePassword = $mysqli->prepare($updatePasswordQuery);
 
     if (!$stmtUpdatePassword) {
-        $_SESSION['error'] = "Error preparing password update statement: " . $conn->error;
+        $_SESSION['error'] = "Error preparing password update statement: " . $mysqli->error;
         header("Location: reset.php?token=$token");
         exit();
     }
@@ -77,8 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($stmtUpdatePassword->affected_rows === 1) {
         // Mark the token as used
-        $markTokenUsedQuery = "UPDATE password_reset SET used = TRUE WHERE token = ?";
-        $stmtMarkTokenUsed = $conn->prepare($markTokenUsedQuery);
+        $markTokenUsedQuery = "UPDATE password_reset SET used = 1 WHERE token = ?";
+        $stmtMarkTokenUsed = $mysqli->prepare($markTokenUsedQuery);
 
         if ($stmtMarkTokenUsed) {
             $stmtMarkTokenUsed->bind_param("s", $token);
@@ -101,5 +93,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 
-$conn->close();
+$mysqli->close();
 ?>

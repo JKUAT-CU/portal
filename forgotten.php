@@ -5,12 +5,11 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require 'vendor/autoload.php';
+require 'backend/db.php'; // Include the database connection
 
-require 'backend/db.php';
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Check if the database connection is successful
+if ($mysqli->connect_error) {
+    die("Database connection failed: " . $mysqli->connect_error);
 }
 
 // Check if the request method is POST
@@ -30,10 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Store the token in the database
     $insertTokenQuery = "INSERT INTO password_reset (email, token, created_at) VALUES (?, ?, ?)";
-    $stmtInsertToken = $conn->prepare($insertTokenQuery);
+    $stmtInsertToken = $mysqli->prepare($insertTokenQuery);
 
     if (!$stmtInsertToken) {
-        error_log("Database prepare failed: " . $conn->error);
+        error_log("Database prepare failed: " . $mysqli->error);
         $_SESSION['error'] = "Something went wrong. Please try again later.";
         header("Location: forgot.php");
         exit();
