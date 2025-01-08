@@ -86,7 +86,7 @@
         "viewport": {
           "width": 200,
           "height": 200,
-          "type": "square",
+          "type": "circle",
           "border": {
             "width": 2,
             "enable": true,
