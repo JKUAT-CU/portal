@@ -59,42 +59,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // $log[] = "Password: $password";
     // $log[] = "Password Confirmation: $password_confirmation";
 
-        // Check if email already exists
-        $emailCheckSql = "SELECT id FROM cu_members WHERE email = ? LIMIT 1";
-        $emailCheckStmt = $mysqli->prepare($emailCheckSql);
-        $emailCheckStmt->bind_param("s", $email);
-        $emailCheckStmt->execute();
+    // Check if email already exists
+    $emailCheckSql = "SELECT id FROM cu_members WHERE email = ? LIMIT 1";
+    $emailCheckStmt = $mysqli->prepare($emailCheckSql);
+    $emailCheckStmt->bind_param("s", $email);
+    $emailCheckStmt->execute();
+    $emailCheckStmt->bind_result($emailResult);
+    $emailExists = $emailCheckStmt->fetch();
+    $emailCheckStmt->close();
 
-        // Use bind_result() to fetch the result
-        $emailCheckStmt->bind_result($result);
-        $emailExists = $emailCheckStmt->fetch();
-
-        if ($emailExists) {
-            $response['valid'] = false;
-            $response['message'] = "The email address is already registered.";
-            $log[] = $response['message'];
-        } else {
-            $log[] = "Email is not registered. Proceeding to check registration number.";
-        }
-
-        $emailCheckStmt->close();
-
+    if ($emailExists) {
+        $response['valid'] = false;
+        $response['message'] = "The email address is already registered.";
+    }
 
     // Check if registration number already exists
-    $regNumberCheckSql = "SELECT * FROM cu_members WHERE registration_number = ? LIMIT 1";
+    $regNumberCheckSql = "SELECT id FROM cu_members WHERE registration_number = ? LIMIT 1";
     $regNumberCheckStmt = $mysqli->prepare($regNumberCheckSql);
     $regNumberCheckStmt->bind_param("s", $registration_number);
     $regNumberCheckStmt->execute();
-    $regNumberCheckResult = $regNumberCheckStmt->get_result();
+    $regNumberCheckStmt->bind_result($regNumberResult);
+    $regNumberExists = $regNumberCheckStmt->fetch();
+    $regNumberCheckStmt->close();
 
-    if ($regNumberCheckResult->num_rows > 0) {
+    if ($regNumberExists) {
         $response['valid'] = false;
-        $response['message'] = $response['message'] ?? ""; // Avoid undefined index
         $response['message'] .= " Also, the registration number is already registered.";
-        $log[] = $response['message'];
-    } else {
-        $log[] = "Registration number is available. Proceeding with registration.";
     }
+
 
     // // Check password confirmation
     // if ($password !== $password_confirmation) {
