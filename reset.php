@@ -32,6 +32,10 @@
             background-color: #F5F5DC; /* Beige for input background */
             color: #800000; /* Maroon for input text */
         }
+        .password-toggle {
+            cursor: pointer;
+            color: #FFFFFF; /* White for the toggle icon */
+        }
     </style>
 </head>
 <body class="d-flex align-items-center justify-content-center vh-100">
@@ -50,17 +54,23 @@
                         <?php endif; ?>
 
                         <form action="resetpassword.php" method="POST" id="resetPasswordForm">
-                            <input type="hidden" name="token" value="<?= $_GET['token'] ?>" />
-                            <div class="mb-4 pb-2">
+                            <input type="hidden" name="token" value="<?= htmlspecialchars($_GET['token'] ?? '') ?>" />
+                            <div class="mb-4 pb-2 position-relative">
                                 <div class="form-outline">
                                     <input type="password" id="new_password" name="new_password" class="form-control form-control-lg" required />
                                     <label class="form-label" for="new_password">New Password</label>
+                                    <span class="password-toggle position-absolute top-50 end-0 translate-middle-y me-3" onclick="togglePasswordVisibility('new_password')">
+                                        <i class="bi bi-eye" id="new_password_icon"></i>
+                                    </span>
                                 </div>
                             </div>
-                            <div class="mb-4 pb-2">
+                            <div class="mb-4 pb-2 position-relative">
                                 <div class="form-outline">
                                     <input type="password" id="confirm_password" name="confirm_password" class="form-control form-control-lg" required />
                                     <label class="form-label" for="confirm_password">Confirm Password</label>
+                                    <span class="password-toggle position-absolute top-50 end-0 translate-middle-y me-3" onclick="togglePasswordVisibility('confirm_password')">
+                                        <i class="bi bi-eye" id="confirm_password_icon"></i>
+                                    </span>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-custom btn-lg btn-block">Reset Password</button>
@@ -73,5 +83,23 @@
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script>
+        // Function to toggle password visibility
+        function togglePasswordVisibility(inputId) {
+            const inputField = document.getElementById(inputId);
+            const icon = document.getElementById(`${inputId}_icon`);
+            if (inputField.type === "password") {
+                inputField.type = "text";
+                icon.classList.remove("bi-eye");
+                icon.classList.add("bi-eye-slash");
+            } else {
+                inputField.type = "password";
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye");
+            }
+        }
+    </script>
 </body>
 </html>
