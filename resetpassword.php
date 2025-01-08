@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    $updatePasswordQuery = "UPDATE user SET password = ? WHERE email = ?";
+    $updatePasswordQuery = "UPDATE cu_members SET password = ? WHERE email = ?";
     $stmt = $mysqli->prepare($updatePasswordQuery);
     $stmt->bind_param("ss", $hashedPassword, $email);
     $stmt->execute();
