@@ -12,11 +12,11 @@ error_reporting(E_ALL);
 // $clientApiKey = $headers['X-API-KEY'] ?? null; // Fetch the key from the "X-API-KEY" header
 
 // Validate the API key
-if ($clientApiKey !== API_KEY) {
-    http_response_code(403); // Forbidden
-    echo json_encode(['error' => 'Invalid or missing API key']);
-    exit();
-}
+// if ($clientApiKey !== API_KEY) {
+//     http_response_code(403); // Forbidden
+//     echo json_encode(['error' => 'Invalid or missing API key']);
+//     exit();
+// }
 
 // Check if the accountNumber parameter is provided
 if (!isset($_GET['accountNumber']) || empty(trim($_GET['accountNumber']))) {
