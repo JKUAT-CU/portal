@@ -25,7 +25,7 @@ if (!isset($_GET['accountNumber']) || empty(trim($_GET['accountNumber']))) {
     exit();
 }
 
-$accountNumber = 'MM620'; // Sanitize the input
+
 
 // Include the database connection file
 include "db.php"; // Ensure this file has the correct $db variable
