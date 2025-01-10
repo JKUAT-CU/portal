@@ -71,12 +71,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $missionCost = isset($collectionAmount) ? $collectionAmount : 1700;
 
     // Fetch contributions data from API
-    // $apiUrl = "https://portal.jkuatcu.org/missions/pages/api.php?accountNumber=" . urlencode($accountNumber);
-    // $options = [
-    //     "http" => [
-    //         "header" => "X-API-KEY: " . API_KEY
-    //     ]
-    // ];
+    $apiUrl = "https://portal.jkuatcu.org/missions/pages/api.php?accountNumber=" . urlencode($accountNumber);
+    $options = [
+        "http" => [
+            "header" => "X-API-KEY: " . API_KEY
+        ]
+    ];
     $context = stream_context_create($options);
     $response = file_get_contents($apiUrl, false, $context);
 
