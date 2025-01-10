@@ -42,13 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'status' => 'success',
                 'message' => 'Amount updated successfully.',
             ]);
-            // Ensure the JSON response is sent before redirecting
-            flush();
             // Redirect to dashboard.php
             header("Location: dashboard.php");
             exit();
         }
-        
     } catch (Exception $e) {
         error_log($e->getMessage());
         echo json_encode(['status' => 'error', 'message' => 'An error occurred while updating the amount.']);
@@ -106,3 +103,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 // Fallback for unsupported methods
 echo json_encode(['status' => 'error', 'message' => 'Invalid request method.']);
 exit();
+?>
