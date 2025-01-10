@@ -58,8 +58,17 @@ if ($stmt = $db->prepare($query)) {
         }
 
         if (empty($data)) {
-            http_response_code(404); // Not Found
-            echo json_encode(['error' => 'No records found for the provided account number']);
+            // If no data is found, return zero values
+            header('Content-Type: application/json');
+            echo json_encode([
+                [
+                    'BillRefNumber' => $accountNumber,
+                    'TransAmount' => 0,
+                    'TransTime' => null,
+                    'BusinessShortCode' => null,
+                    'TransID' => null,
+                ]
+            ], JSON_PRETTY_PRINT);
         } else {
             // Output the JSON data
             header('Content-Type: application/json');
