@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mail->Host       = 'mail.jkuatcu.org';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'reset@jkuatcu.org';
-        $mail->Password   = '8&+cqTnOa!A5';
+        $mail->Password   = 'y94coT;N?$9H';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
 
